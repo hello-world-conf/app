@@ -10,6 +10,8 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^0.1.2
+  flutter_staggered_animations: ^0.1.2
+
 
 dev_dependencies:
   flutter_test:
@@ -17,6 +19,21 @@ dev_dependencies:
 
 
 flutter:
-
+  assets:
+    - assets/icon.png
+    - assets/logotipo.png
+    - assets/question-circle.png
+    - assets/calendar-edit-1.png
+    - assets/headphones-customer-support-human.png
+    - assets/location-user.png
+    - assets/megaphone-1.png
+    - assets/binocular.png
+    - assets/tags-favorite-star.png
+    - assets/bookmarks-document.png
+    - assets/logout-2.png
+  fonts:
+    - family: Roboto
+      fonts:
+        - asset: fonts/Roboto-Light.ttf
   uses-material-design: true
 
