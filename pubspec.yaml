@@ -11,7 +11,9 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^0.1.2
   flutter_staggered_animations: ^0.1.2
-
+  animated_background: ^1.0.5
+  rflutter_alert: ^1.0.3
+  connectivity: ^0.4.6+2
 
 dev_dependencies:
   flutter_test:
@@ -31,6 +33,12 @@ flutter:
     - assets/tags-favorite-star.png
     - assets/bookmarks-document.png
     - assets/logout-2.png
+    - assets/login-2.png
+    - assets/developer-community-github-1.png
+    - assets/social-media-facebook-1.png
+    - assets/fail.png
+    - assets/flash-off.png
+    - assets/remove-badge.png
   fonts:
     - family: Roboto
       fonts:
