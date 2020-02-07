@@ -2,7 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:helloworld/models/user.dart';
-
+import 'package:helloworld/views/information.dart';
+import 'package:helloworld/views/schedule.dart';
+import 'package:helloworld/views/speakers.dart';
+import 'package:helloworld/views/sponsors.dart';
+import 'package:helloworld/widgets/alerts.dart';
+import 'package:url_launcher/url_launcher.dart';
 class HomePage extends StatefulWidget{
   User user;
   HomePage(this.user);
@@ -16,7 +21,6 @@ class _HomePageState extends State<HomePage>{
   _HomePageState(this.user);
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return WillPopScope(
       child: Scaffold(
         bottomNavigationBar: FlatButton(
@@ -76,17 +80,15 @@ class _HomePageState extends State<HomePage>{
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
-                                //Icon(Icons.info_outline,color: Color(0xff307EBC),size: 80,),
                                 Image.asset('assets/question-circle.png',fit: BoxFit.contain,height: 80, color: Color(0xff307EBC),),
                                 SizedBox(height: 2,),
                                 Text("Information", style: TextStyle(color: Colors.white,fontSize: 20),),
-                                //SizedBox(height: 2,),
-                                //Container(color: Color(0xff448ac2), width: 100,height: 1,margin: EdgeInsets.only(right: 30),)
                               ],
                             ),
                             onPressed: () {
                               // Information page
                               print("Information button pressed...");
+                              Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Information()));
                             },
                           )
                       ),
@@ -122,6 +124,7 @@ class _HomePageState extends State<HomePage>{
                             onPressed: () {
                               // Information page
                               print("Speakers button pressed...");
+                              Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Speakers()));
                             },
                           )
                       ),
@@ -190,6 +193,8 @@ class _HomePageState extends State<HomePage>{
                             onPressed: () {
                               // Information page
                               print("Schedule button pressed...");
+                              Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Schedule()));
+
                             },
                           )
                       ),
@@ -225,6 +230,7 @@ class _HomePageState extends State<HomePage>{
                             onPressed: () {
                               // Information page
                               print("Sponsers button pressed...");
+                              Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Sponsors()));
                             },
                           )
                       ),
@@ -257,9 +263,18 @@ class _HomePageState extends State<HomePage>{
                                 //Container(color: Color(0xff448ac2), width: 100,height: 1,margin: EdgeInsets.only(right: 30),)
                               ],
                             ),
-                            onPressed: () {
+                            onPressed: () async{
                               // Information page
                               print("Location button pressed...");
+                              String latitude = '41.1733741';
+                              String longitude = '-8.61114889';
+                                String googleUrl = 'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude';
+                                if (await canLaunch(googleUrl)) {
+                                  await launch(googleUrl);
+                                } else {
+                                  showCustomMessage(context, "Ups!", "An error occured while trying to open the location.");
+                                }
+
                             },
                           )
                       ),

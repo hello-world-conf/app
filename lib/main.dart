@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:helloworld/animations/delayed_animations.dart';
+import 'package:helloworld/utilities/api.dart';
 import 'package:helloworld/widgets/alerts.dart';
 import 'package:helloworld/utilities/connection.dart';
 import 'package:helloworld/views/homepage.dart';
 import 'package:animated_background/animated_background.dart';
-import 'package:connectivity/connectivity.dart';
 import 'package:flutter/foundation.dart';
 import 'models/user.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void main() {
   return runApp(MyApp());
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Roboto',
         primaryColor: Color(0xff232531),
         canvasColor: Color(0xff232531),
-        accentColor: Colors.white,
+        accentColor: Color(0xff307EBC),
       ),
       home: LoginPage(),
     );
@@ -40,9 +41,11 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
-  User user;
   final int delayedAmount = 500;
+  final _formKey = GlobalKey<FormState>();
+  String email;
   double _scale;
+  bool loading = false;
   AnimationController _controller;
   ParticleOptions particleOptions = ParticleOptions(
     image: Image.asset('assets/icon.png'),
@@ -86,6 +89,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     _scale = 1 - _controller.value;
+
     return Scaffold(
       bottomNavigationBar: DelayedAnimation(
         delay: delayedAmount + 500,
@@ -111,12 +115,12 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+
                   DelayedAnimation(
                     child: Image.asset('assets/icon.png',fit: BoxFit.contain,height: 150,),
                     delay: delayedAmount + 500,
                   ),
                   SizedBox(height: 10,),
-
                   DelayedAnimation(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -142,22 +146,31 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                         borderRadius: BorderRadius.circular(15.0),
                         color: Color(0xff1f212c),
                       ),
-                      child: TextFormField(
-                        style: TextStyle(color: Colors.white),
-                        cursorColor: Color(0xff307EBC),
-                        autocorrect: false,
-                        keyboardType: TextInputType.emailAddress,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xff307EBC), width: 1.0),
+                      child: Form(
+                        key: _formKey,
+                        child: TextFormField(
+                          onSaved: (value){
+                            this.email = value;
+                          },
+                          validator: (value){
+                            if(value.isEmpty) return "Please insert an e-mail.";
+                            return null;
+                          },
+                          style: TextStyle(color: Colors.white),
+                          cursorColor: Color(0xff307EBC),
+                          autocorrect: false,
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: InputDecoration(
+                            contentPadding: new EdgeInsets.only(top: 17,left: 15),
+                            errorStyle: TextStyle(color: Colors.redAccent,),
+                            border: InputBorder.none,
+                            prefixIcon: Icon(Icons.alternate_email,color: Colors.white70,),
+                            hintText: 'e-mail',
+                            hintStyle: TextStyle(color: Colors.white70),
+
                           ),
-                          prefixIcon: Icon(Icons.alternate_email,color: Colors.white70,),
-                          hintText: 'e-mail',
-                          hintStyle: TextStyle(color: Colors.white70),
 
                         ),
-
                       )
                     ),
                     delay: delayedAmount + 800,
@@ -178,11 +191,19 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                   DelayedAnimation(
                     child: FlatButton(
                       child: Text("Get a ticket" , style: TextStyle(color: Color(0xff307EBC), fontSize: 20),),
-                      onPressed: () {},
+                      onPressed: () async{
+                        String helloWorldSite = 'https://helloworldconf.eventbrite.pt';
+                        if (await canLaunch(helloWorldSite)) {
+                        await launch(helloWorldSite);
+                        } else {
+                        showCustomMessage(context, "Upsiii!", "It looks like something went wrong , please contact the support for this application, or go to www.helloworldconf.pt");
+                        }
+                      },
                     ),
                     delay: delayedAmount + 1000,
                   ),
                   SizedBox(height: 4.0,),
+                  loading? CircularProgressIndicator( valueColor: new AlwaysStoppedAnimation<Color>(Color(0xff307EBC))) : Text(""),
                 ],
               ),
             )
@@ -226,8 +247,21 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       _controller.reverse();
       return;
     }
-    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => HomePage(this.user)));
-    _controller.reverse();
+    if(_formKey.currentState.validate() && !loading){
+      _formKey.currentState.save();
+      setState(() {
+        loading = true;
+      });
+      User user = await getUserByEmail(this.email);
+      if(user != null)
+        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => HomePage(user)));
+      else showAuthError(context);
+      _controller.reverse();
+      setState(() {
+        loading = false;
+      });
+    }
+
   }
 
   void _loginUp(TapUpDetails details) {
@@ -240,9 +274,5 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       paint: particlePaint,
     );
   }
-
-
-
-
 
 }

@@ -13,7 +13,8 @@ dependencies:
   flutter_staggered_animations: ^0.1.2
   animated_background: ^1.0.5
   rflutter_alert: ^1.0.3
-  connectivity: ^0.4.6+2
+  http: ^0.12.0+4
+  url_launcher: ^5.4.1
 
 dev_dependencies:
   flutter_test:
@@ -39,6 +40,27 @@ flutter:
     - assets/fail.png
     - assets/flash-off.png
     - assets/remove-badge.png
+    - assets/keyboard-arrow-return.png
+    - assets/cog-search.png
+    - assets/sword-health.png
+    - assets/egitron.png
+    - assets/ifthenpay.png
+    - assets/new-work.png
+    - assets/jetbrains.png
+    - assets/bolt.png
+    - assets/github.png
+    - assets/aeufp.png
+    - assets/myufp.png
+    - assets/tecmaia.png
+    - assets/ufp.png
+    - assets/maik_hello_world.jpg
+    - assets/rita_hello_world.jpg
+    - assets/artur_hello_world.png
+    - assets/tiago_alao_hello_world.jpg
+    - assets/tiago_seabra_hello_world.jpg
+    - assets/luis_araujo_hello_world.jpg
+    - assets/professional-network-linkedin.png
+    - assets/social-media-twitter.png
   fonts:
     - family: Roboto
       fonts:

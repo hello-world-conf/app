@@ -1,5 +1,4 @@
 import 'dart:io';
-
 /*
   Check if user has internet or not.
  */
@@ -14,6 +13,8 @@ Future<bool> hasInternet() async {
   }
   return false;
 }
+
+
 
 
 
